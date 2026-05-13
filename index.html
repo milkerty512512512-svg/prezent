@@ -10,19 +10,16 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
         }
-
         h1 {
             text-align: center;
             color: white;
@@ -30,7 +27,6 @@
             margin-bottom: 30px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-
         .crossword-section {
             background: white;
             border-radius: 20px;
@@ -38,7 +34,6 @@
             margin-bottom: 30px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
-
         .crossword-title {
             font-size: 1.8em;
             color: #4a4a8a;
@@ -47,55 +42,66 @@
             padding-bottom: 15px;
             border-bottom: 3px solid #667eea;
         }
-
         .crossword-grid {
             display: grid;
-            gap: 2px;
+            gap: 0;
             margin: 20px auto;
             justify-content: center;
+            background: #333;
+            padding: 2px;
+            border-radius: 8px;
         }
-
         .cell {
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             text-transform: uppercase;
+            position: relative;
+            background: white;
         }
-
+        .cell.empty {
+            background: #333;
+        }
         .cell.active {
             background: #fff;
-            border: 2px solid #333;
         }
-
-        .cell.empty {
+        .cell input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
             background: transparent;
+            outline: none;
+            caret-color: #667eea;
         }
-
-        .cell.number {
-            position: relative;
+        .cell input:focus {
+            background: #e8f0ff;
         }
-
-        .cell.number::before {
-            content: attr(data-number);
+        .cell .number {
             position: absolute;
             top: 2px;
-            left: 3px;
-            font-size: 9px;
+            left: 4px;
+            font-size: 10px;
             color: #666;
             font-weight: normal;
+            z-index: 1;
+            pointer-events: none;
         }
-
+        .cell.correct input { background: #d4edda; }
+        .cell.incorrect input { background: #f8d7da; }
         .questions-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
             margin-top: 30px;
         }
-
         .questions-column h3 {
             color: #4a4a8a;
             margin-bottom: 15px;
@@ -103,7 +109,6 @@
             border-bottom: 2px solid #667eea;
             padding-bottom: 8px;
         }
-
         .question {
             padding: 10px 15px;
             margin-bottom: 10px;
@@ -112,28 +117,30 @@
             border-left: 4px solid #667eea;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-
         .question:hover {
             transform: translateX(5px);
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
-
         .question-number {
             font-weight: bold;
             color: #667eea;
         }
-
         .question-text {
             color: #333;
         }
-
         .answer {
             color: #28a745;
             font-weight: bold;
             margin-left: 5px;
         }
-
-        .show-answers-btn {
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
@@ -141,16 +148,14 @@
             font-size: 16px;
             border-radius: 25px;
             cursor: pointer;
-            display: block;
-            margin: 20px auto;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-
-        .show-answers-btn:hover {
+        .btn:hover {
             transform: scale(1.05);
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
-
+        .btn.check { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+        .btn.clear { background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%); }
         .answers-section {
             background: #e8f5e9;
             border-radius: 15px;
@@ -158,27 +163,32 @@
             margin-top: 20px;
             display: none;
         }
-
-        .answers-section.show {
-            display: block;
-        }
-
+        .answers-section.show { display: block; }
         .answers-section h3 {
             color: #2e7d32;
             margin-bottom: 15px;
             text-align: center;
         }
-
+        .answers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .answer-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .answer-item .num {
+            font-weight: bold;
+            color: #667eea;
+        }
         @media (max-width: 768px) {
-            .questions-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .cell {
-                width: 28px;
-                height: 28px;
-                font-size: 13px;
-            }
+            .questions-container { grid-template-columns: 1fr; }
+            .cell { width: 32px; height: 32px; font-size: 14px; }
+            .cell input { font-size: 14px; }
+            .cell .number { font-size: 8px; }
         }
     </style>
 </head>
@@ -189,9 +199,7 @@
         <!-- Кроссворд 1: Позвоночные животные -->
         <div class="crossword-section">
             <h2 class="crossword-title">🦴 Кроссворд №1: Позвоночные животные</h2>
-            
             <div id="crossword1" class="crossword-grid"></div>
-
             <div class="questions-container">
                 <div class="questions-column">
                     <h3>📋 По горизонтали:</h3>
@@ -218,10 +226,44 @@
                     <div class="question"><span class="question-number">12.</span> <span class="question-text">Пресмыкающееся без конечностей</span> <span class="answer">(ЗМЕЯ)</span></div>
                     <div class="question"><span class="question-number">14.</span> <span class="question-text">Морское млекопитающее с усами</span> <span class="answer">(ТЮЛЕНЬ)</span></div>
                     <div class="question"><span class="question-number">16.</span> <span class="question-text">Птица с красивым хвостом</span> <span class="answer">(ПАВЛИН)</span></div>
-                    <div class="question"><span class="question-number">18.</span> <span class="question-text">Летающий млекопитающее</span> <span class="answer">(ЛЕТУЧАЯ МЫШЬ)</span></div>
+                    <div class="question"><span class="question-number">18.</span> <span class="question-text">Летающее млекопитающее</span> <span class="answer">(ЛЕТУЧАЯ МЫШЬ)</span></div>
                     <div class="question"><span class="question-number">20.</span> <span class="question-text">Рыба с красным мясом</span> <span class="answer">(ЛОСОСЬ)</span></div>
                     <div class="question"><span class="question-number">22.</span> <span class="question-text">Крупное млекопитающее с хоботом</span> <span class="answer">(СЛОН)</span></div>
                     <div class="question"><span class="question-number">24.</span> <span class="question-text">Млекопитающее, впадающее в спячку</span> <span class="answer">(МЕДВЕДЬ)</span></div>
+                </div>
+            </div>
+            <div class="btn-container">
+                <button class="btn check" onclick="checkAnswers(1)">✅ Проверить</button>
+                <button class="btn clear" onclick="clearCrossword(1)">🗑️ Очистить</button>
+                <button class="btn" onclick="toggleAnswers('answers1')">👁️ Показать ответы</button>
+            </div>
+            <div class="answers-section" id="answers1">
+                <h3>✅ Все ответы</h3>
+                <div class="answers-grid">
+                    <div class="answer-item"><span class="num">1.</span> СИНИЙ КИТ</div>
+                    <div class="answer-item"><span class="num">2.</span> ЛЕВ</div>
+                    <div class="answer-item"><span class="num">3.</span> ОРЁЛ</div>
+                    <div class="answer-item"><span class="num">4.</span> ЛЯГУШКА</div>
+                    <div class="answer-item"><span class="num">5.</span> ХАМЕЛЕОН</div>
+                    <div class="answer-item"><span class="num">6.</span> ДЕЛЬФИН</div>
+                    <div class="answer-item"><span class="num">7.</span> ЖИРАФ</div>
+                    <div class="answer-item"><span class="num">8.</span> АИСТ</div>
+                    <div class="answer-item"><span class="num">9.</span> БОБР</div>
+                    <div class="answer-item"><span class="num">10.</span> ЛЕОПАРД</div>
+                    <div class="answer-item"><span class="num">11.</span> СТРАУС</div>
+                    <div class="answer-item"><span class="num">12.</span> ЗМЕЯ</div>
+                    <div class="answer-item"><span class="num">13.</span> ТРИТОН</div>
+                    <div class="answer-item"><span class="num">14.</span> ТЮЛЕНЬ</div>
+                    <div class="answer-item"><span class="num">15.</span> ТИГР</div>
+                    <div class="answer-item"><span class="num">16.</span> ПАВЛИН</div>
+                    <div class="answer-item"><span class="num">17.</span> ЁЖ</div>
+                    <div class="answer-item"><span class="num">18.</span> ЛЕТУЧАЯ МЫШЬ</div>
+                    <div class="answer-item"><span class="num">19.</span> СОВА</div>
+                    <div class="answer-item"><span class="num">20.</span> ЛОСОСЬ</div>
+                    <div class="answer-item"><span class="num">21.</span> АКУЛА</div>
+                    <div class="answer-item"><span class="num">22.</span> СЛОН</div>
+                    <div class="answer-item"><span class="num">23.</span> НОСОРОГ</div>
+                    <div class="answer-item"><span class="num">24.</span> МЕДВЕДЬ</div>
                 </div>
             </div>
         </div>
@@ -229,140 +271,237 @@
         <!-- Кроссворд 2: Беспозвоночные животные -->
         <div class="crossword-section">
             <h2 class="crossword-title">🐌 Кроссворд №2: Беспозвоночные животные</h2>
-            
             <div id="crossword2" class="crossword-grid"></div>
-
             <div class="questions-container">
                 <div class="questions-column">
                     <h3>📋 По горизонтали:</h3>
                     <div class="question"><span class="question-number">1.</span> <span class="question-text">Насекомое, строящее муравейники</span> <span class="answer">(МУРАВЕЙ)</span></div>
                     <div class="question"><span class="question-number">3.</span> <span class="question-text">Насекомое с красивыми крыльями</span> <span class="answer">(БАБОЧКА)</span></div>
-                    <div class="question"><span class="question-number">5.</span> <span class="question-text">Паукообразное с клешнями</span> <span class="answer">(СКОРПИОН)</span></div>
+                    <div class="question"><span class="question-number">5.</span> <span class="question-text">Паукообразное с клешнями и ядовитым жалом</span> <span class="answer">(СКОРПИОН)</span></div>
                     <div class="question"><span class="question-number">7.</span> <span class="question-text">Моллюск с раковиной на спине</span> <span class="answer">(УЛИТКА)</span></div>
-                    <div class="question"><span class="question-number">9.</span> <span class="question-text">Насекомое, переносящее болезни</span> <span class="answer">(КОМАР)</span></div>
+                    <div class="question"><span class="question-number">9.</span> <span class="question-text">Насекомое, переносящее заболевания</span> <span class="answer">(КОМАР)</span></div>
                     <div class="question"><span class="question-number">11.</span> <span class="question-text">Морской моллюск с восемью щупальцами</span> <span class="answer">(ОСЬМИНОГ)</span></div>
                     <div class="question"><span class="question-number">13.</span> <span class="question-text">Насекомое, собирающее мёд</span> <span class="answer">(ПЧЕЛА)</span></div>
                     <div class="question"><span class="question-number">15.</span> <span class="question-text">Морское беспозвоночное с иголками</span> <span class="answer">(МОРСКОЙ ЁЖ)</span></div>
                     <div class="question"><span class="question-number">17.</span> <span class="question-text">Насекомое, светящееся ночью</span> <span class="answer">(СВЕТЛЯЧОК)</span></div>
                     <div class="question"><span class="question-number">19.</span> <span class="question-text">Паук, плетущий сети</span> <span class="answer">(ПАУК)</span></div>
                     <div class="question"><span class="question-number">21.</span> <span class="question-text">Моллюск с двумя раковинами</span> <span class="answer">(УСТРИЦА)</span></div>
-                    <div class="question"><span class="question-number">23.</span> <span class="question-text">Насекомое, похожее на стрекозу</span> <span class="answer">(СТРЕКОЗА)</span></div>
+                    <div class="question"><span class="question-number">23.</span> <span class="question-text">Насекомое с длинным телом и крыльями</span> <span class="answer">(СТРЕКОЗА)</span></div>
                 </div>
                 <div class="questions-column">
                     <h3>📋 По вертикали:</h3>
-                    <div class="question"><span class="question-number">2.</span> <span class="question-text">Насекомое, играющее на скрипке</span> <span class="answer">(СВЕРЧОК)</span></div>
+                    <div class="question"><span class="question-number">2.</span> <span class="question-text">Насекомое, издающее звуки трением лапок</span> <span class="answer">(СВЕРЧОК)</span></div>
                     <div class="question"><span class="question-number">4.</span> <span class="question-text">Членистоногое с множеством ног</span> <span class="answer">(СОРКОНОЖКА)</span></div>
                     <div class="question"><span class="question-number">6.</span> <span class="question-text">Морской моллюск с десятью щупальцами</span> <span class="answer">(КАЛЬМАР)</span></div>
-                    <div class="question"><span class="question-number">8.</span> <span class="question-text">Насекомое с яркой окраской, божья...</span> <span class="answer">(КОРОБКА)</span></div>
+                    <div class="question"><span class="question-number">8.</span> <span class="question-text">Насекомое с яркой красной окраской и точками</span> <span class="answer">(БОЖЬЯ КОРОВКА)</span></div>
                     <div class="question"><span class="question-number">10.</span> <span class="question-text">Ракообразное с большими клешнями</span> <span class="answer">(КРАБ)</span></div>
-                    <div class="question"><span class="question-number">12.</span> <span class="question-text">Морское беспозвоночное, коралловый...</span> <span class="answer">(ПОЛИП)</span></div>
-                    <div class="question"><span class="question-number">14.</span> <span class="question-text">Насекомое, уничтожающее древесину</span> <span class="answer">(ТЕРМИТ)</span></div>
+                    <div class="question"><span class="question-number">12.</span> <span class="question-text">Морское беспозвоночное, образующее рифы</span> <span class="answer">(КОРАЛЛ)</span></div>
+                    <div class="question"><span class="question-number">14.</span> <span class="question-text">Насекомое, похожее на белую моль</span> <span class="answer">(МОЛЬ)</span></div>
                     <div class="question"><span class="question-number">16.</span> <span class="question-text">Кишечнополостное со щупальцами</span> <span class="answer">(МЕДУЗА)</span></div>
-                    <div class="question"><span class="question-number">18.</span> <span class="question-text">Ракообразное, любимое лакомство</span> <span class="answer">(ОМАР)</span></div>
-                    <div class="question"><span class="question-number">20.</span> <span class="question-text">Насекомое, переносящее малярию</span> <span class="answer">(МАЛЯРИЙНЫЙ КОМАР)</span></div>
-                    <div class="question"><span class="question-number">22.</span> <span class="question-text">Моллюск без раковины</span> <span class="answer">(СЛИЗЕНЬ)</span></div>
-                    <div class="question"><span class="question-number">24.</span> <span class="question-text">Насекомое, сохранившееся с древности</span> <span class="answer">(ТАРАКАН)</span></div>
+                    <div class="question"><span class="question-number">18.</span> <span class="question-text">Крупное ракообразное, деликатес</span> <span class="answer">(ОМАР)</span></div>
+                    <div class="question"><span class="question-number">20.</span> <span class="question-text">Насекомое с длинными усами</span> <span class="answer">(ЖУК)</span></div>
+                    <div class="question"><span class="question-number">22.</span> <span class="question-text">Моллюск без раковины, похожий на улитку</span> <span class="answer">(СЛИЗЕНЬ)</span></div>
+                    <div class="question"><span class="question-number">24.</span> <span class="question-text">Насекомое, живущее с древних времён</span> <span class="answer">(ТАРАКАН)</span></div>
                 </div>
             </div>
-        </div>
-
-        <button class="show-answers-btn" onclick="toggleAnswers()">👁️ Показать/скрыть ответы</button>
-
-        <div class="answers-section" id="answers">
-            <h3>✅ Все ответы</h3>
+            <div class="btn-container">
+                <button class="btn check" onclick="checkAnswers(2)">✅ Проверить</button>
+                <button class="btn clear" onclick="clearCrossword(2)">🗑️ Очистить</button>
+                <button class="btn" onclick="toggleAnswers('answers2')">👁️ Показать ответы</button>
+            </div>
+            <div class="answers-section" id="answers2">
+                <h3>✅ Все ответы</h3>
+                <div class="answers-grid">
+                    <div class="answer-item"><span class="num">1.</span> МУРАВЕЙ</div>
+                    <div class="answer-item"><span class="num">2.</span> СВЕРЧОК</div>
+                    <div class="answer-item"><span class="num">3.</span> БАБОЧКА</div>
+                    <div class="answer-item"><span class="num">4.</span> СОРКОНОЖКА</div>
+                    <div class="answer-item"><span class="num">5.</span> СКОРПИОН</div>
+                    <div class="answer-item"><span class="num">6.</span> КАЛЬМАР</div>
+                    <div class="answer-item"><span class="num">7.</span> УЛИТКА</div>
+                    <div class="answer-item"><span class="num">8.</span> БОЖЬЯ КОРОВКА</div>
+                    <div class="answer-item"><span class="num">9.</span> КОМАР</div>
+                    <div class="answer-item"><span class="num">10.</span> КРАБ</div>
+                    <div class="answer-item"><span class="num">11.</span> ОСЬМИНОГ</div>
+                    <div class="answer-item"><span class="num">12.</span> КОРАЛЛ</div>
+                    <div class="answer-item"><span class="num">13.</span> ПЧЕЛА</div>
+                    <div class="answer-item"><span class="num">14.</span> МОЛЬ</div>
+                    <div class="answer-item"><span class="num">15.</span> МОРСКОЙ ЁЖ</div>
+                    <div class="answer-item"><span class="num">16.</span> МЕДУЗА</div>
+                    <div class="answer-item"><span class="num">17.</span> СВЕТЛЯЧОК</div>
+                    <div class="answer-item"><span class="num">18.</span> ОМАР</div>
+                    <div class="answer-item"><span class="num">19.</span> ПАУК</div>
+                    <div class="answer-item"><span class="num">20.</span> ЖУК</div>
+                    <div class="answer-item"><span class="num">21.</span> УСТРИЦА</div>
+                    <div class="answer-item"><span class="num">22.</span> СЛИЗЕНЬ</div>
+                    <div class="answer-item"><span class="num">23.</span> СТРЕКОЗА</div>
+                    <div class="answer-item"><span class="num">24.</span> ТАРАКАН</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Кроссворд 1: Позвоночные животные
-        const crossword1Data = [
-            'СИНИЙКИТ.....',
-            'Е..О..Х......',
-            'В..Р..А......',
-            '..Ё..М......Н',
-            'ЛЯГУШКА..Т..О',
-            '......Е..И..С',
-            'ДЕЛЬФИН..Г..О',
-            '......У..Р..Р',
-            'БОБР..Ш..О..О',
-            '......К..Л..Г',
-            'СТРАУС..Е..И',
-            '........П..Й',
-            'ТРИТОН..А..Ф',
-            '........Р.. ',
-            'ТИГР....Д... ',
-            '........И... ',
-            'ЁЖ......Н... ',
-            '........А... ',
-            'СОВА........ ',
-            '............ ',
-            'АКУЛА........',
-            '............ ',
-            'СЛОН.........',
-            '............ ',
-            'НОСОРОГ......',
+        // Кроссворд 1: Позвоночные животные (15x15)
+        const crossword1Layout = [
+            ['С','И','Н','И','Й',' ','К','И','Т',' ',' ',' ',' ',' ',' '],
+            ['Л',' ',' ',' ','А',' ','А',' ','Р',' ',' ',' ',' ',' ',' '],
+            ['Е',' ',' ',' ','М',' ','М',' ','И',' ',' ',' ',' ',' ',' '],
+            ['В',' ',' ',' ','Е',' ','Е',' ','Т',' ',' ',' ',' ',' ',' '],
+            [' ','Л','Я','Г','У','Ш','К','А',' ',' ',' ',' ',' ',' ',' '],
+            [' ','Е',' ',' ','Р',' ','А',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['Д','О',' ',' ','Ш',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['Е','П',' ',' ','К',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['Л','А',' ',' ','А',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['Ь','Р',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['Ф','Д',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['И',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['Н',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['Т','И','Г','Р',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['Ё','Ж',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['С','О','В','А',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['А','К','У','Л','А',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['С','Л','О','Н',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['Н','О','С','О','Р','О','Г',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['М','Е','Д','В','Е','Д','Ь',' ',' ',' ',' ',' ',' ',' ',' '],
         ];
 
         // Кроссворд 2: Беспозвоночные животные
-        const crossword2Data = [
-            'МУРАВЕЙ......',
-            'У..В......О..',
-            'Р..Е......С..',
-            'А..Р..П..ЬМИН',
-            'В..Ч..А..И..О',
-            'Е..К..У..Н..Г',
-            'Й..А..Л..О.. ',
-            '...ИТКА..Г... ',
-            '......Ы.... ',
-            'ПЧЕЛА..... ',
-            '.......... ',
-            'МОРСКОЙЁЖ..',
-            '.......... ',
-            'СВЕТЛЯЧОК..',
-            '.......... ',
-            'ПАУК...... ',
-            '.......... ',
-            'ОМАР...... ',
-            '.......... ',
-            'УСТРИЦА... ',
-            '.......... ',
-            'СТРЕКОЗА.. ',
-            '.......... ',
-            'ТАРАКАН... ',
+        const crossword2Layout = [
+            ['М','У','Р','А','В','Е','Й',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['Б','А','Б','О','Ч','К','А',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['С','К','О','Р','П','И','О','Н',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['У','Л','И','Т','К','А',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['К','О','М','А','Р',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['О','С','Ь','М','И','Н','О','Г',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['П','Ч','Е','Л','А',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['М','О','Р','С','К','О','Й',' ','Ё','Ж',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['С','В','Е','Т','Л','Я','Ч','О','К',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['П','А','У','К',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['У','С','Т','Р','И','Ц','А',' ',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['С','Т','Р','Е','К','О','З','А',' ',' ',' ',' ',' ',' ',' '],
+            [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
+            ['Т','А','Р','А','К','А','Н',' ',' ',' ',' ',' ',' ',' ',' '],
         ];
 
-        function createCrossword(containerId, data) {
+        function createCrossword(containerId, layout) {
             const container = document.getElementById(containerId);
-            const rows = data.length;
-            const cols = Math.max(...data.map(row => row.length));
+            const rows = layout.length;
+            const cols = layout[0].length;
             
-            container.style.gridTemplateColumns = `repeat(${cols}, 35px)`;
+            container.style.gridTemplateColumns = `repeat(${cols}, 40px)`;
             
             for (let row = 0; row < rows; row++) {
                 for (let col = 0; col < cols; col++) {
                     const cell = document.createElement('div');
                     cell.className = 'cell';
                     
-                    if (col < data[row].length && data[row][col] !== ' ') {
-                        cell.classList.add('active');
-                        cell.textContent = data[row][col];
-                    } else {
-                        cell.classList.add('empty');
-                    }
+                    const char = layout[row][col];
                     
+                    if (char === ' ') {
+                        cell.classList.add('empty');
+                    } else {
+                        cell.classList.add('active');
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.maxLength = 1;
+                        input.dataset.answer = char.toUpperCase();
+                        input.dataset.row = row;
+                        input.dataset.col = col;
+                        
+                        input.addEventListener('input', function() {
+                            if (this.value.length === 1) {
+                                const nextCol = parseInt(this.dataset.col) + 1;
+                                const nextInput = container.querySelector(`input[data-row="${this.dataset.row}"][data-col="${nextCol}"]`);
+                                if (nextInput) nextInput.focus();
+                            }
+                        });
+                        
+                        input.addEventListener('keydown', function(e) {
+                            const row = parseInt(this.dataset.row);
+                            const col = parseInt(this.dataset.col);
+                            let target = null;
+                            
+                            if (e.key === 'ArrowRight') {
+                                target = container.querySelector(`input[data-row="${row}"][data-col="${col + 1}"]`);
+                            } else if (e.key === 'ArrowLeft') {
+                                target = container.querySelector(`input[data-row="${row}"][data-col="${col - 1}"]`);
+                            } else if (e.key === 'ArrowDown') {
+                                target = container.querySelector(`input[data-row="${row + 1}"][data-col="${col}"]`);
+                            } else if (e.key === 'ArrowUp') {
+                                target = container.querySelector(`input[data-row="${row - 1}"][data-col="${col}"]`);
+                            } else if (e.key === 'Backspace' && this.value === '') {
+                                target = container.querySelector(`input[data-row="${row}"][data-col="${col - 1}"]`);
+                            }
+                            
+                            if (target) {
+                                target.focus();
+                                e.preventDefault();
+                            }
+                        });
+                        
+                        cell.appendChild(input);
+                    }
                     container.appendChild(cell);
                 }
             }
         }
 
-        function toggleAnswers() {
-            const answers = document.getElementById('answers');
-            answers.classList.toggle('show');
+        function checkAnswers(crosswordNum) {
+            const container = document.getElementById(`crossword${crosswordNum}`);
+            const inputs = container.querySelectorAll('input');
+            
+            inputs.forEach(input => {
+                const userAnswer = input.value.toUpperCase();
+                const correctAnswer = input.dataset.answer;
+                const cell = input.parentElement;
+                
+                cell.classList.remove('correct', 'incorrect');
+                
+                if (userAnswer === correctAnswer) {
+                    cell.classList.add('correct');
+                } else if (userAnswer !== '') {
+                    cell.classList.add('incorrect');
+                }
+            });
         }
 
-        // Инициализация кроссвордов
-        createCrossword('crossword1', crossword1Data);
-        createCrossword('crossword2', crossword2Data);
+        function clearCrossword(crosswordNum) {
+            const container = document.getElementById(`crossword${crosswordNum}`);
+            const inputs = container.querySelectorAll('input');
+            
+            inputs.forEach(input => {
+                input.value = '';
+                input.parentElement.classList.remove('correct', 'incorrect');
+            });
+        }
+
+        function toggleAnswers(id) {
+            const section = document.getElementById(id);
+            section.classList.toggle('show');
+        }
+
+        // Инициализация
+        createCrossword('crossword1', crossword1Layout);
+        createCrossword('crossword2', crossword2Layout);
     </script>
 </body>
 </html>
